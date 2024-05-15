@@ -29,11 +29,11 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        DDNA.initialise(new DDNA.Configuration(
-                this,
-                "07575004106474324897044893014183",
-                "http://collect3347ndrds.deltadna.net/collect/api",
-                "http://engage3347ndrds.deltadna.net"));
+//        DDNA.initialise(new DDNA.Configuration(
+//                this,
+//                "07575004106474324897044893014183",
+//                "http://collect3347ndrds.deltadna.net/collect/api",
+//                "http://engage3347ndrds.deltadna.net"));
 
         DDNA.instance().isPiplConsentRequired(new ConsentTracker.Callback() {
             @Override

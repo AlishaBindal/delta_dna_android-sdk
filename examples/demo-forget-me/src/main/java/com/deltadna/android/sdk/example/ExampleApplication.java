@@ -35,12 +35,14 @@ public class ExampleApplication extends Application {
          * will always be guaranteed to be present, until Android terminates
          * the application.
          */
-        DDNA.initialise(new DDNA.Configuration(
-                this,
-                "07575004106474324897044893014183",
-                "http://collect3347ndrds.deltadna.net/collect/api",
-                "http://engage3347ndrds.deltadna.net")
-                .clientVersion(BuildConfig.VERSION_NAME));
+//        DDNA.initialise(new DDNA.Configuration(
+//                this,
+//                "7a4ab410-e9f7-4dbe-b951-38e457825839",
+//                "production",
+//                "a6bd5ab0-ea8b-41a4-968e-d58b6c86d530",
+//                "https://collect.analytics.unity3d.com/api/analytics/collect/v1/projects",
+//                "https://services.api.unity.com/remote-config/v1/projects")
+//                .clientVersion(BuildConfig.VERSION_NAME));
 
         DDNA.instance().isPiplConsentRequired(new ConsentTracker.Callback() {
             @Override

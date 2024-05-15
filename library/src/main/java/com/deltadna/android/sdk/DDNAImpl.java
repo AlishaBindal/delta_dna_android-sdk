@@ -167,10 +167,10 @@ final class DDNAImpl extends DDNA {
     @Override
     public EventAction recordEvent(Event event) {
         Preconditions.checkArg(event != null, "event cannot be null");
-        if (!whitelistEvents.isEmpty() && !whitelistEvents.contains(event.name)) {
+      /*  if (!whitelistEvents.isEmpty() && !whitelistEvents.contains(event.name)) {
             Log.d(TAG, "Event " + event.name + " is not whitelisted, ignoring");
             return EventAction.EMPTY;
-        }
+        }*/
         
         Log.v(TAG, "Recording event " + event.name);
         if (!started) {
@@ -482,7 +482,7 @@ final class DDNAImpl extends DDNA {
                 .putString(PREVIOUS_ENVIRONMENT_PREFERENCES_KEY, environment)
                 .commit();
     }
-
+    
     DDNAImpl(
             Application application,
             String projectId,
@@ -495,9 +495,9 @@ final class DDNAImpl extends DDNA {
             @Nullable String clientVersion,
             @Nullable String userId,
             @Nullable String platform,
-            Set eventListeners,
-            Set iEventListeners) {
-
+            Set<EventListener> eventListeners,
+            Set<IEventListener> iEventListeners) {
+        
         super(  application,
                 projectId,
                 environmentName,
@@ -509,7 +509,7 @@ final class DDNAImpl extends DDNA {
                 platform,
                 eventListeners,
                 iEventListeners);
-
+        
         this.clientVersion = clientVersion;
         
         final Location location;

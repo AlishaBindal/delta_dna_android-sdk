@@ -47,7 +47,7 @@ final class DDNANonTracking extends DDNA {
     private static final short FORGET_ME_DELAY = 5 * 1000;
     
     private final Handler handler = new Handler(Looper.getMainLooper());
-
+    
     DDNANonTracking(
             Application application,
             String projectId,
@@ -58,9 +58,9 @@ final class DDNANonTracking extends DDNA {
             Settings settings,
             @Nullable String hashSecret,
             @Nullable String platform,
-            Set eventListeners,
-            Set iEventListeners) {
-
+            Set<EventListener> eventListeners,
+            Set<IEventListener> iEventListeners) {
+        
         super(  application,
                 projectId,
                 environmentName,

@@ -23,6 +23,7 @@ import com.deltadna.android.sdk.DDNA;
 import com.deltadna.android.sdk.consent.ConsentStatus;
 import com.deltadna.android.sdk.helpers.Settings;
 import com.deltadna.android.sdk.listeners.RequestListener;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -45,14 +46,15 @@ public class NetworkManager {
     private final String collectUrl;
     private final String engageUrl;
     private final Settings settings;
-    
+    private final String projectId;
+    private final String environmentId;
     @Nullable
     private final String hash;
     @Nullable
     private final MessageDigest md5;
     
     private final NetworkDispatcher dispatcher;
-
+    
     public NetworkManager(
             String projectId,
             String envName,
@@ -61,11 +63,12 @@ public class NetworkManager {
             String engageUrl,
             Settings settings,
             @Nullable String hash) {
-
+        
         this.collectUrl = collectUrl + '/' + projectId + "/environments/" + envName;
         this.engageUrl = engageUrl ;
         this.settings = settings;
-
+        this.environmentId = envKey;
+        this.projectId = projectId;
         this.hash = hash;
         MessageDigest md = null;
         if (hash != null && !hash.isEmpty()) {
@@ -76,7 +79,7 @@ public class NetworkManager {
             }
         }
         md5 = md;
-
+        
         dispatcher = new NetworkDispatcher();
     }
 
@@ -97,8 +100,9 @@ public class NetworkManager {
         Request.Builder<Void> builder = new Request.Builder<Void>()
                 .post(RequestBody.json(payload))
                 .url(payload.has("eventList")
-                        ? buildHashedEndpoint(collectUrl + "/bulk", payload.toString())
-                        : buildHashedEndpoint(collectUrl, payload.toString()))
+                         ? buildHashedEndpoint(collectUrl + "/bulk", payload.toString())
+                         : buildHashedEndpoint(collectUrl, payload.toString()))
+                .url(buildHashedEndpoint(collectUrl, payload.toString()))
                 .header("Accept", "application/json")
                 .maxRetries(settings.getHttpRequestMaxRetries())
                 .retryDelay(settings.getHttpRequestRetryDelay() * 1000)
@@ -112,7 +116,7 @@ public class NetworkManager {
     public CancelableRequest engage(
             JSONObject payload,
             RequestListener<JSONObject> listener) {
-        
+
         // TODO tweak timeouts to make engage come back within the magic 5s
         return engage(payload, listener, false);
     }
@@ -121,6 +125,19 @@ public class NetworkManager {
                                     RequestListener<JSONObject> listener,
                                     boolean isConfigurationRequest){
         int timeoutInSeconds = isConfigurationRequest ? settings.getHttpRequestConfigTimeout() : settings.getHttpRequestEngageTimeout();
+
+        // Inject projectId and environmentId into payload for Remote Config
+        try {
+            if (projectId != null) {
+                payload.put("projectId", projectId);
+            }
+            if (environmentId != null) {
+                payload.put("environmentId", environmentId);
+            }
+        }catch (JSONException e) {
+            // should never happen due to params enforcement
+            throw new IllegalArgumentException(e);
+        }
 
         Request.Builder<JSONObject> builder = new Request.Builder<JSONObject>()
                 .post(RequestBody.json(payload))

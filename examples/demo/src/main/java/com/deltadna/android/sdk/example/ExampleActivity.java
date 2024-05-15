@@ -172,7 +172,8 @@ public class ExampleActivity extends AppCompatActivity {
 
     public void onEngage(View view) {
         DDNA.instance().requestEngagement(
-                "testEngage",
+                new Engagement<>("levelData")
+                        .putParam("build", 3670),
                 new EngageListenerExample());
     }
 

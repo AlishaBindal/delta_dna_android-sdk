@@ -164,22 +164,23 @@ final class EventHandler {
         protected Void doInBackground(Void... voids) {
             final JSONObject event;
             try {
-                event = new JSONObject()
-                        .put("userID", userId)
-                        .put("decisionPoint", engagement.name)
-                        .put("flavour", engagement.flavour)
-                        .put("sessionID", sessionId)
-                        .put("version", engageApiVersion)
-                        .put("sdkVersion", sdkVersion)
-                        .put("platform", platform)
-                        .put("manufacturer", ClientInfo.manufacturer())
-                        .put("operatingSystemVersion", ClientInfo.operatingSystemVersion())
-                        .put("timezoneOffset", ClientInfo.timezoneOffset())
-                        .put("locale", ClientInfo.locale());
 
+                // This is all new, the remote config request body is different from DDNA Engage
+                JSONObject userParams ;
                 if (!engagement.params.isEmpty()) {
-                    event.put("parameters", engagement.params.json);
+                    userParams = engagement.params.json;
                 }
+                else {
+                    userParams = new JSONObject();
+                }
+                userParams.put("decisionPoint", engagement.name);
+
+                event = new JSONObject()
+                        .put("userId", userId)
+                        .put("attributes", new JSONObject()
+                                .put("unity",new JSONObject())
+                                .put("app",new JSONObject())
+                                .put("user", userParams));
             } catch (JSONException e) {
                 // should never happen due to params enforcement
                 throw new IllegalArgumentException(e);

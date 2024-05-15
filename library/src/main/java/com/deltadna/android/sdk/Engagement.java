@@ -22,6 +22,7 @@ import com.deltadna.android.sdk.helpers.Objects;
 import com.deltadna.android.sdk.helpers.Preconditions;
 import com.deltadna.android.sdk.net.Response;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -193,7 +194,23 @@ public class Engagement<T extends Engagement<T>> extends Event<T> {
         // unpack response for easy access
         this.statusCode = response.code;
         this.cached = response.cached;
-        this.json = response.body;
+
+        // Reformat RemoteConfig response to look more like a DDNA DescisionPoint response
+        try {
+            if (response.body.has("configs")){
+                JSONObject configs = response.body.getJSONObject("configs");
+                if (configs.has("settings")){
+                    this.json  = configs.getJSONObject("settings");
+                }
+            }
+
+            if (this.json == null) {
+                this.json = response.body;
+            }
+        } catch (JSONException e) {
+            throw new IllegalArgumentException(e);
+        }
+
         this.error = response.error;
         
         return (T) this;
