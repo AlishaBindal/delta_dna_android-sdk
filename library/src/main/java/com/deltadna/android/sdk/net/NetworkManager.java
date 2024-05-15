@@ -52,18 +52,20 @@ public class NetworkManager {
     private final MessageDigest md5;
     
     private final NetworkDispatcher dispatcher;
-    
+
     public NetworkManager(
+            String projectId,
+            String envName,
             String envKey,
             String collectUrl,
             String engageUrl,
             Settings settings,
             @Nullable String hash) {
-        
-        this.collectUrl = collectUrl + '/' + envKey;
-        this.engageUrl = engageUrl + '/' + envKey;
+
+        this.collectUrl = collectUrl + '/' + projectId + "/environments/" + envName;
+        this.engageUrl = engageUrl ;
         this.settings = settings;
-        
+
         this.hash = hash;
         MessageDigest md = null;
         if (hash != null && !hash.isEmpty()) {
@@ -74,7 +76,7 @@ public class NetworkManager {
             }
         }
         md5 = md;
-        
+
         dispatcher = new NetworkDispatcher();
     }
 

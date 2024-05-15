@@ -35,15 +35,17 @@ class DDNADelegate extends DDNA {
     
     private final DDNA tracking;
     private final DDNA nonTracking;
-    
+
     DDNADelegate(
             Configuration configuration,
-            Set<EventListener> eventListeners,
-            Set<IEventListener> iEventListeners,
+            Set eventListeners,
+            Set iEventListeners,
             DDNA tracking,
             DDNA nonTracking) {
-        
+
         super(  configuration.application,
+                configuration.projectId,
+                configuration.environmentName,
                 configuration.environmentKey,
                 configuration.collectUrl,
                 configuration.engageUrl,

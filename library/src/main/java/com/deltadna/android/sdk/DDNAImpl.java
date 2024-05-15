@@ -482,9 +482,11 @@ final class DDNAImpl extends DDNA {
                 .putString(PREVIOUS_ENVIRONMENT_PREFERENCES_KEY, environment)
                 .commit();
     }
-    
+
     DDNAImpl(
             Application application,
+            String projectId,
+            String environmentName,
             String environmentKey,
             String collectUrl,
             String engageUrl,
@@ -493,10 +495,12 @@ final class DDNAImpl extends DDNA {
             @Nullable String clientVersion,
             @Nullable String userId,
             @Nullable String platform,
-            Set<EventListener> eventListeners,
-            Set<IEventListener> iEventListeners) {
-        
+            Set eventListeners,
+            Set iEventListeners) {
+
         super(  application,
+                projectId,
+                environmentName,
                 environmentKey,
                 collectUrl,
                 engageUrl,
@@ -505,7 +509,7 @@ final class DDNAImpl extends DDNA {
                 platform,
                 eventListeners,
                 iEventListeners);
-        
+
         this.clientVersion = clientVersion;
         
         final Location location;
